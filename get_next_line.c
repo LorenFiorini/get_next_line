@@ -6,91 +6,96 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 13:00:47 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/25 20:21:46 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/26 00:49:50 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-char	*read_buffer(int fd, char *ptr, int *flag)
+char	*read_buffer(int fd, char *sp)
 {
 	char	*b;
 	int		i;
 
 	i = 1;
-	b = ft_calloc(BUFFER_SIZE + 1, 1);
-	if (!b)
+	b = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (b == NULL)
 		return (NULL);
-	while (i > 0 && ft_strchr(ptr, '\n') == NULL)
+	while (i != 0 && (!ft_strchr(sp, '\n')))
 	{
 		i = read(fd, b, BUFFER_SIZE);
 		if (i == -1)
-			return (free(b), free(ptr), NULL);
+			return (free(sp), free(b), NULL);
 		b[i] = '\0';
-		if (!ptr)
-			ptr = ft_strdup(b);
-		else
-			ptr = ft_strjoin(ptr, b);
+		sp = ft_strjoin_free(sp, b);
+		if (*sp == '\0')
+			return (free(sp), free(b), NULL);
 	}
-	*flag = i;
 	free(b);
-	return (ptr);
+	return (sp);
 }
 
-char	*ft_get_line(char *sptr)
+char	*getting_line(char *sp)
 {
 	char	*line;
-	int		line_len;
+	int		i;
 
-	line_len = 0;
-	if (!*sptr)
-	{
-		free (sptr);
+	i = 0;
+	if (!*sp)
+		return (free(sp), NULL);
+	while (sp[i] != '\n' && sp[i] != '\0')
+		i++;
+	line = (char *)malloc((i + 2) * sizeof(char));
+	if (!line)
 		return (NULL);
+	i = 0;
+	while (sp[i] != '\n' && sp[i] != '\0')
+	{
+		line[i] = sp[i];
+		i++;
 	}
-	while ((sptr[line_len] != '\n' && sptr[line_len] != '\0'))
-		line_len++;
-	line = ft_substr(sptr, 0, line_len + 1);
+	line[i] = sp[i];
+	line[i + 1] = '\0';
 	return (line);
 }
 
-char	*remain_part(char *sptr, int flag)
+char	*remaining(char *sp)
 {
-	char	*ptr;
-	size_t	len;
-	size_t	len_line;
+	char	*new;
+	int		i;
+	int		j;
 
-	ptr = NULL;
-	if (!*sptr)
-	{
-		free(sptr);
+	i = 0;
+	j = 0;
+	if (!*sp)
+		return (free(sp), NULL);
+	while (sp[i] != '\n' && sp[i] != '\0')
+		i++;
+	if (sp[i] == '\0')
+		return (free(sp), NULL);
+	new = (char *)malloc((ft_strlen(sp) - i + 1) * sizeof(char));
+	if (!new)
 		return (NULL);
-	}
-	len = ft_strlen(sptr);
-	len_line = ft_strchr(sptr, '\n') - sptr + 1;
-	if (flag != 0)
-		ptr = ft_substr(sptr, len_line, len - len_line);
-	free(sptr);
-	return (ptr);
+	i++;
+	while (sp[i] != '\0')
+		new[j++] = sp[i++];
+	new[j] = '\0';
+	free(sp);
+	return (new);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*sp = NULL;
 	char		*ln;
-	int			flag;
 
-	flag = 1;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	sp = read_buffer(fd, sp, &flag);
+	sp = read_buffer(fd, sp);
 	if (!sp)
 		return (NULL);
-	if (*sp)
-		ln = ft_get_line(sp);
-	else
-		ln = (NULL);
-	sp = remain_part(sp, flag);
+	ln = getting_line(sp);
+	sp = remaining(sp);
 	return (ln);
 }

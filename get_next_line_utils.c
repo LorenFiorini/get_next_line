@@ -6,18 +6,18 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:11:59 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/25 20:32:47 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/26 00:45:54 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(char *s)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (s[i])
+	while (s && s[i])
 		i++;
 	return (i);
 }
@@ -33,7 +33,7 @@ void	*ft_calloc(size_t count, size_t size)
 	if (size && (total / size) != count)
 		return (NULL);
 	ptr = malloc(total);
-	if (ptr == NULL)
+	if (!ptr)
 		return (NULL);
 	while (i < total)
 	{
@@ -43,7 +43,7 @@ void	*ft_calloc(size_t count, size_t size)
 	return (ptr);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
 	int		i;
 	char	*str;
@@ -59,25 +59,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char	*ft_strdup(const char *src)
-{
-	char	*str;
-	int		i;
-
-	i = 0;
-	str = (char *)calloc(ft_strlen(src) + 1, sizeof(char));
-	if (str == NULL)
-		return (NULL);
-	while (src[i] != '\0')
-	{
-		str[i] = src[i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin_free(char *s1, char *s2)
 {
 	char	*str;
 	size_t	i;
@@ -85,45 +67,20 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	i = 0;
 	j = 0;
-	if (!s1 || !s2)
-		return (NULL);
-	str = (char *)calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
+	str = (char *)ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
 	if (!str)
 		return (NULL);
-	while (s1[i])
+	while (s1 && s1[i] != '\0')
 	{
 		str[i] = s1[i];
 		i++;
 	}
-	while (s2[j])
+	while (s2 && s2[j] != '\0')
 	{
 		str[i + j] = s2[j];
 		j++;
 	}
 	str[i + j] = '\0';
-	return (str);
-}
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*str;
-	size_t	i;
-
-	i = 0;
-	if (s == NULL)
-		return (NULL);
-	if (start >= (unsigned int) ft_strlen(s))
-		return (ft_strdup(""));
-	if (len > ft_strlen(s + start))
-		len = ft_strlen(s + start);
-	str = (char *)calloc(len + 1, sizeof(char));
-	if (str == NULL)
-		return (NULL);
-	while (i < len)
-	{
-		str[i] = s[start + i];
-		i++;
-	}
-	str[i] = '\0';
+	free(s1);
 	return (str);
 }
