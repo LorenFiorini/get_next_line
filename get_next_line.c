@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 13:00:47 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/27 16:08:38 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/27 16:17:05 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*getting_line(char *sp)
 	int		i;
 
 	i = 0;
-	if (!*sp)
+	if (!sp)
 		return (free(sp), NULL);
 	while (sp[i] != '\n' && sp[i] != '\0')
 		i++;
@@ -68,7 +68,7 @@ char	*remaining(char *sp)
 
 	i = 0;
 	j = 0;
-	if (!*sp || !sp)
+	if (!sp)
 		return (free(sp), NULL);
 	while (sp[i] != '\n' && sp[i] != '\0')
 		i++;
@@ -96,8 +96,6 @@ char	*get_next_line(int fd)
 	if (!sp)
 		return (NULL);
 	ln = getting_line(sp);
-	if (!ln)
-		return (NULL);
 	sp = remaining(sp);
 	return (ln);
 }
