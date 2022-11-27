@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 13:00:47 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/27 16:17:05 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/27 16:20:22 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char	*read_buffer(int fd, char *sp)
 	while (i == BUFFER_SIZE && (!ft_strchr(sp, '\n')))
 	{
 		i = read(fd, b, BUFFER_SIZE);
+		if (i == 0)
+			break ;
 		if (i == -1)
 			return (free(sp), free(b), NULL);
 		b[i] = '\0';
@@ -72,7 +74,7 @@ char	*remaining(char *sp)
 		return (free(sp), NULL);
 	while (sp[i] != '\n' && sp[i] != '\0')
 		i++;
-	if (sp[i] == '\0')
+	if (sp[i] == '\0' || sp[i + 1] == '\0')
 		return (free(sp), NULL);
 	new = (char *)ft_calloc(ft_strlen(sp) - i + 1, sizeof(char));
 	if (!new)
