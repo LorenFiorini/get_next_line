@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 13:00:47 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/26 00:57:03 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/27 11:57:02 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,18 @@ char	*read_buffer(int fd, char *sp)
 
 	i = 1;
 	b = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (b == NULL)
+	if (!b)
 		return (NULL);
-	while (i != 0 && (!ft_strchr(sp, '\n')))
+	while (i > 0 && (!ft_strchr(sp, '\n')))
 	{
 		i = read(fd, b, BUFFER_SIZE);
 		if (i == -1)
 			return (free(sp), free(b), NULL);
+		if (i == 0)
+			break ;
 		b[i] = '\0';
 		sp = ft_strjoin_free(sp, b);
-		if (*sp == '\0')
+		if (!*sp)
 			return (free(sp), free(b), NULL);
 	}
 	free(b);
@@ -50,7 +52,7 @@ char	*getting_line(char *sp)
 		i++;
 	line = (char *)malloc((i + 1) * sizeof(char));
 	if (!line)
-		return (NULL);
+		return (free(sp), NULL);
 	line[i] = '\0';
 	while (i > 0)
 	{
@@ -76,7 +78,7 @@ char	*remaining(char *sp)
 		return (free(sp), NULL);
 	new = (char *)malloc((ft_strlen(sp) - i + 1) * sizeof(char));
 	if (!new)
-		return (NULL);
+		return (free(sp), NULL);
 	i++;
 	while (sp[i] != '\0')
 		new[j++] = sp[i++];
@@ -96,6 +98,8 @@ char	*get_next_line(int fd)
 	if (!sp)
 		return (NULL);
 	ln = getting_line(sp);
+	if (!ln)
+		return (NULL);
 	sp = remaining(sp);
 	return (ln);
 }
