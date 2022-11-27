@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 13:00:50 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/27 11:27:19 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/27 16:05:27 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 2
+#  define BUFFER_SIZE 1
 # endif
 
 char	*get_next_line(int fd);

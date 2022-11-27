@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:11:59 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/27 11:50:11 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/27 16:07:09 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	*ft_strjoin_free(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
-	str = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	str = (char *)ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
 	if (!str)
 		return (free(s1), NULL);
 	while (s1 && s1[i] != '\0')
