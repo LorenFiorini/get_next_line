@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:11:59 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/27 16:14:26 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/27 16:36:30 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*ft_calloc(size_t count, size_t size)
 
 	i = 0;
 	total = count * size;
-	if (size && (total / size) != count && total > 0)
+	if (size && ((total / size) != count) && total > 1)
 		return (NULL);
 	ptr = malloc(total);
 	if (!ptr)
@@ -67,8 +67,6 @@ char	*ft_strjoin_free(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
-	if (!s2)
-		return (s1);
 	str = (char *)ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
 	if (!str)
 		return (free(s1), NULL);

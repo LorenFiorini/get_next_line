@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 13:00:47 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/27 16:20:22 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/27 16:45:01 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,12 @@ char	*remaining(char *sp)
 
 char	*get_next_line(int fd)
 {
-	static char	*sp = NULL;
+	static char	*sp;
 	char		*ln;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	sp = read_buffer(fd, sp);
-	if (!sp)
-		return (NULL);
 	ln = getting_line(sp);
 	sp = remaining(sp);
 	return (ln);
