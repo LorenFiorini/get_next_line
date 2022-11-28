@@ -6,25 +6,39 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:31 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/28 02:35:23 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/28 03:52:27 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
-# include <stdlib.h>
-# include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 42
 # endif
 
-# define MAX_FD 1024
+typedef struct s_buffer	t_buffer;
 
-char	*get_next_line(int fd);
-size_t	ft_strlen(char *s);
-void	*ft_calloc(size_t count, size_t size);
-char	*ft_strchr(char *s, int c);
-char	*ft_strjoin_free(char *s1, char *s2);
+typedef struct s_buffer
+{
+	int			fd;
+	char		buf[BUFFER_SIZE];
+	int			idx;
+	int			len;
+	t_buffer	*next;
+}	t_buffer;
+
+typedef struct s_string
+{
+	char	*str;
+	int		len;
+	int		size;
+}	t_string;
+
+int			update_line(t_string *l, t_buffer b);
+int			update_buffer(t_buffer *b);
+t_string	optimize_string(t_string s);
+
+char		*get_next_line(int fd);
 
 #endif

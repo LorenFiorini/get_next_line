@@ -6,96 +6,98 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:25 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/28 02:36:12 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/28 03:51:49 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-char	*read_buffer(int fd, char *sp)
+
+static t_string	init_string(void)
 {
-	char	*b;
-	int		i;
+	t_string	s;
 
-	i = BUFFER_SIZE;
-	b = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!b)
-		return (NULL);
-	while (i == BUFFER_SIZE && (!ft_strchr(sp, '\n')))
-	{
-		i = read(fd, b, BUFFER_SIZE);
-		if (i == 0)
-			break ;
-		if (i == -1)
-			return (free(sp), free(b), NULL);
-		b[i] = '\0';
-		sp = ft_strjoin_free(sp, b);
-		if (!*sp || !sp)
-			return (free(sp), free(b), NULL);
-	}
-	free(b);
-	return (sp);
+	s.str = 0;
+	s.len = 0;
+	s.size = 0;
+	return (s);
 }
 
-char	*getting_line(char *sp)
+static int	read_buffer(int fd, t_buffer *b)
 {
-	char	*line;
-	int		i;
-
-	i = 0;
-	if (!sp)
-		return (free(sp), NULL);
-	while (sp[i] != '\n' && sp[i] != '\0')
-		i++;
-	if (sp[i] == '\n')
-		i++;
-	line = (char *)ft_calloc(i + 1, sizeof(char));
-	if (!line)
-		return (free(sp), NULL);
-	line[i] = '\0';
-	while (i > 0)
-	{
-		i--;
-		line[i] = sp[i];
-	}
-	return (line);
+	b->len = read(fd, b->buf, BUFFER_SIZE);
+	if (b->len > 0)
+		return (1);
+	else
+		return (0);
 }
 
-char	*remaining(char *sp)
+static t_buffer	*get_buffer(int fd, t_buffer *b)
 {
-	char	*new;
-	int		i;
-	int		j;
+	while (1)
+	{
+		if (b->fd == fd)
+			return (b);
+		else if (b->next)
+			b = b->next;
+		else
+		{
+			b->next = (t_buffer *) malloc(sizeof(t_buffer));
+			if (!b->next)
+				return (0);
+			b = b->next;
+			b->fd = fd;
+			b->idx = 0;
+			b->len = 0;
+			b->next = 0;
+		}
+	}
+}
 
-	i = 0;
-	j = 0;
-	if (!sp)
-		return (free(sp), NULL);
-	while (sp[i] != '\n' && sp[i] != '\0')
-		i++;
-	if (sp[i] == '\0' || sp[i + 1] == '\0')
-		return (free(sp), NULL);
-	new = (char *)ft_calloc(ft_strlen(sp) - i + 1, sizeof(char));
-	if (!new)
-		return (free(sp), NULL);
-	i++;
-	while (sp[i] != '\0')
-		new[j++] = sp[i++];
-	new[j] = '\0';
-	free(sp);
-	return (new);
+static int	delete_buffer(int fd, t_buffer *b)
+{
+	t_buffer	*curr;
+	t_buffer	*temp;
+
+	curr = b;
+	while (curr->next)
+	{
+		if (curr->next->fd == fd)
+		{
+			temp = curr->next->next;
+			free(curr->next);
+			curr->next = temp;
+			return (1);
+		}
+		else
+			curr = curr->next;
+	}
+	return (0);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*sp[MAX_FD];
-	char		*ln;
+	static t_buffer	head;
+	t_buffer		*curr;
+	t_string		line;
 
-	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0)
-		return (NULL);
-	sp[fd] = read_buffer(fd, sp[fd]);
-	ln = getting_line(sp[fd]);
-	sp[fd] = remaining(sp[fd]);
-	return (ln);
+	curr = get_buffer(fd, &head);
+	if (!curr)
+		return (0);
+	line = init_string();
+	while (curr)
+	{
+		if (!curr->idx && !read_buffer(fd, curr))
+			break ;
+		if (!update_line(&line, *curr) || !update_buffer(curr))
+			break ;
+		if (line.str[line.len - 1] == '\n' || curr->idx)
+			break ;
+	}
+	line = optimize_string(line);
+	if ((curr->len < BUFFER_SIZE && !curr->idx) || !line.str)
+		delete_buffer(fd, &head);
+	return (line.str);
 }

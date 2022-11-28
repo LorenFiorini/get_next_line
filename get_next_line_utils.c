@@ -5,82 +5,99 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/25 19:11:59 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/27 22:24:36 by lfiorini         ###   ########.fr       */
+/*   Created: 2022/11/28 03:26:29 by lfiorini          #+#    #+#             */
+/*   Updated: 2022/11/28 03:28:20 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdlib.h>
+#include <unistd.h>
 
-size_t	ft_strlen(char *s)
+static int	get_index(char *s, char c, int begin, int end)
+{
+	int	i;
+
+	i = begin;
+	while (i < end)
+	{
+		if (s[i] == c)
+			return (i);
+		i++;
+	}
+	return (end - 1);
+}
+
+static void	*gnl_memcpy(void *dst, const void *src, size_t n)
 {
 	size_t	i;
 
+	if (!dst && !src)
+		return (0);
 	i = 0;
-	while (s && s[i] != '\0')
-		i++;
-	return (i);
-}
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	void	*ptr;
-	size_t	total;
-	size_t	i;
-
-	i = 0;
-	total = count * size;
-	if (size && ((total / size) != count) && total > 1)
-		return (NULL);
-	ptr = (void *)malloc(total);
-	if (!ptr)
-		return (NULL);
-	while (i < total)
+	while (i < n)
 	{
-		((char *)ptr)[i] = 0;
+		((char *) dst)[i] = ((const char *) src)[i];
 		i++;
 	}
-	return (ptr);
+	return (dst);
 }
 
-char	*ft_strchr(char *s, int c)
+int	update_line(t_string *l, t_buffer b)
 {
-	int		i;
-	char	*str;
+	t_string	tmp;
 
-	if (!s)
-		return (NULL);
-	i = 0;
-	str = (char *)s;
-	while (str[i] != '\0' && str[i] != c)
-		i++;
-	if (str[i] == (char)c)
-		return (&str[i]);
-	return (0);
+	tmp.len = get_index(b.buf, '\n', b.idx, b.len) - b.idx + 1 + l->len;
+	if (l->len && tmp.len < l->size)
+		gnl_memcpy(l->str + l->len, b.buf + b.idx, tmp.len - l->len);
+	else
+	{
+		l->size = tmp.len * 10 + 1;
+		tmp.str = (char *) malloc(sizeof(char) * (l->size));
+		if (!tmp.str)
+		{
+			if (l->str)
+				free(l->str);
+			l->str = 0;
+			return (0);
+		}
+		gnl_memcpy(tmp.str, l->str, l->len);
+		gnl_memcpy(tmp.str + l->len, b.buf + b.idx, tmp.len - l->len);
+		if (l->str)
+			free(l->str);
+		l->str = tmp.str;
+	}
+	l->len = tmp.len;
+	l->str[l->len] = 0;
+	return (1);
 }
 
-char	*ft_strjoin_free(char *s1, char *s2)
+int	update_buffer(t_buffer *b)
 {
-	char	*str;
-	size_t	i;
-	size_t	j;
+	b->idx = (get_index(b->buf, '\n', b->idx, b->len) + 1) % b->len;
+	return (1);
+}
 
-	i = 0;
-	j = 0;
-	str = (char *)ft_calloc(ft_strlen(s1) + ft_strlen(s2) + 1, sizeof(char));
-	if (!str)
-		return (free(s1), NULL);
-	while (s1 && s1[i] != '\0')
+t_string	optimize_string(t_string s)
+{
+	t_string	opt;
+
+	opt.str = 0;
+	opt.len = s.len;
+	opt.size = s.len + 1;
+	if (!s.str || s.len + 1 == s.size)
+		return (s);
+	else
 	{
-		str[i] = s1[i];
-		i++;
+		opt.str = (char *) malloc(sizeof(char) * opt.size);
+		if (!opt.str)
+		{
+			free(s.str);
+			return (opt);
+		}
+		gnl_memcpy(opt.str, s.str, opt.len);
+		opt.str[opt.len] = 0;
+		free(s.str);
+		return (opt);
 	}
-	while (s2 && s2[j] != '\0')
-	{
-		str[i + j] = s2[j];
-		j++;
-	}
-	str[i + j] = '\0';
-	free(s1);
-	return (str);
 }
