@@ -6,14 +6,15 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:37 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/28 03:52:51 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:59:30 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 #include <stdlib.h>
+#include <unistd.h>
 
-static int	get_index(char *s, char c, int begin, int end)
+int	get_index(char *s, char c, int begin, int end)
 {
 	int	i;
 
@@ -71,10 +72,12 @@ int	update_line(t_string *l, t_buffer b)
 	return (1);
 }
 
-int	update_buffer(t_buffer *b)
+int	read_buffer(int fd, t_buffer *b)
 {
-	b->idx = (get_index(b->buf, '\n', b->idx, b->len) + 1) % b->len;
-	return (1);
+	b->len = read(fd, b->buf, BUFFER_SIZE);
+	if (b->len > 0)
+		return (1);
+	return (0);
 }
 
 t_string	optimize_string(t_string s)

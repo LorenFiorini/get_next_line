@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:25 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/28 04:25:55 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:59:29 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,6 @@ static t_string	init_string(void)
 	s.len = 0;
 	s.size = 0;
 	return (s);
-}
-
-static int	read_buffer(int fd, t_buffer *b)
-{
-	b->len = read(fd, b->buf, BUFFER_SIZE);
-	if (b->len > 0)
-		return (1);
-	return (0);
 }
 
 static t_buffer	*get_buffer(int fd, t_buffer *b)
@@ -56,51 +48,60 @@ static t_buffer	*get_buffer(int fd, t_buffer *b)
 
 static int	delete_buffer(int fd, t_buffer *b)
 {
-	t_buffer	*curr;
+	t_buffer	*cur;
 	t_buffer	*temp;
 
-	curr = b;
-	while (curr->next)
+	cur = b;
+	while (cur->next)
 	{
-		if (curr->next->fd == fd)
+		if (cur->next->fd == fd)
 		{
-			temp = curr->next->next;
-			free(curr->next);
-			curr->next = temp;
+			temp = cur->next->next;
+			free(cur->next);
+			cur->next = temp;
 			return (1);
 		}
 		else
-			curr = curr->next;
+			cur = cur->next;
 	}
+	return (0);
+}
+
+static int	loop(int fd, t_buffer *cur, t_string *line)
+{
+	while (1)
+	{
+		if (!cur->idx && !read_buffer(fd, cur))
+			break ;
+		if (!update_line(line, *cur))
+			break ;
+		cur->idx = (get_index(cur->buf, '\n', cur->idx, cur->len) + 1);
+		cur->idx %= cur->len;
+		if (line->str[line->len - 1] == '\n' || cur->idx)
+			break ;
+	}
+	*line = optimize_string(*line);
+	if (cur->len == -1)
+	{
+		free(line->str);
+		line->str = 0;
+	}
+	if ((cur->len < BUFFER_SIZE && !cur->idx) || !line->str)
+		return (1);
 	return (0);
 }
 
 char	*get_next_line(int fd)
 {
 	static t_buffer	head;
-	t_buffer		*curr;
+	t_buffer		*cur;
 	t_string		line;
 
-	curr = get_buffer(fd, &head);
-	if (!curr)
+	cur = get_buffer(fd, &head);
+	if (!cur)
 		return (0);
 	line = init_string();
-	while (curr)
-	{
-		if (!curr->idx && !read_buffer(fd, curr))
-			break ;
-		if (!update_line(&line, *curr) || !update_buffer(curr))
-			break ;
-		if (line.str[line.len - 1] == '\n' || curr->idx)
-			break ;
-	}
-	line = optimize_string(line);
-	if (curr->len == -1)
-	{
-		free(line.str);
-		line.str = 0;
-	}
-	if ((curr->len < BUFFER_SIZE && !curr->idx) || !line.str)
+	if (loop(fd, cur, &line))
 		delete_buffer(fd, &head);
 	return (line.str);
 }
