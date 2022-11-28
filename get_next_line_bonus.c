@@ -6,14 +6,13 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:25 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/28 03:51:49 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/28 04:25:55 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 #include <stdlib.h>
 #include <unistd.h>
-
 
 static t_string	init_string(void)
 {
@@ -30,8 +29,7 @@ static int	read_buffer(int fd, t_buffer *b)
 	b->len = read(fd, b->buf, BUFFER_SIZE);
 	if (b->len > 0)
 		return (1);
-	else
-		return (0);
+	return (0);
 }
 
 static t_buffer	*get_buffer(int fd, t_buffer *b)
@@ -97,6 +95,11 @@ char	*get_next_line(int fd)
 			break ;
 	}
 	line = optimize_string(line);
+	if (curr->len == -1)
+	{
+		free(line.str);
+		line.str = 0;
+	}
 	if ((curr->len < BUFFER_SIZE && !curr->idx) || !line.str)
 		delete_buffer(fd, &head);
 	return (line.str);
