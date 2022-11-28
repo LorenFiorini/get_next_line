@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:11:59 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/27 16:36:30 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/27 22:24:36 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	*ft_calloc(size_t count, size_t size)
 	total = count * size;
 	if (size && ((total / size) != count) && total > 1)
 		return (NULL);
-	ptr = malloc(total);
+	ptr = (void *)malloc(total);
 	if (!ptr)
 		return (NULL);
 	while (i < total)
