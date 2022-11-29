@@ -6,13 +6,23 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 03:26:29 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/29 17:47:43 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 18:35:35 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	get_index(char *s, char c, int begin, int end)
+t_string	init_string(void)
+{
+	t_string	s;
+
+	s.str = 0;
+	s.len = 0;
+	s.size = 0;
+	return (s);
+}
+
+int	get_index(char *s, char c, int begin, int end)
 {
 	int	i;
 
@@ -26,7 +36,7 @@ static int	get_index(char *s, char c, int begin, int end)
 	return (end - 1);
 }
 
-static void	*gnl_memcpy(void *dst, const void *src, size_t n)
+void	*gnl_memcpy(void *dst, const void *src, size_t n)
 {
 	size_t	i;
 
@@ -67,12 +77,6 @@ int	update_line(t_string *l, t_buffer b)
 	}
 	l->len = tmp.len;
 	l->str[l->len] = 0;
-	return (1);
-}
-
-int	update_buffer(t_buffer *b)
-{
-	b->idx = (get_index(b->buf, '\n', b->idx, b->len) + 1) % b->len;
 	return (1);
 }
 

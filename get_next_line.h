@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 03:26:39 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/29 17:47:27 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 18:32:29 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,11 @@ typedef struct s_string
 	int		size;
 }	t_string;
 
+t_string	init_string(void);
+int			get_index(char *s, char c, int begin, int end);
 int			update_line(t_string *l, t_buffer b);
-int			update_buffer(t_buffer *b);
 t_string	optimize_string(t_string s);
+void		*gnl_memcpy(void *dst, const void *src, size_t n);
 
 char		*get_next_line(int fd);
 
