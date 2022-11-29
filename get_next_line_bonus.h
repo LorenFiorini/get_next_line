@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:31 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/29 19:16:48 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 19:26:56 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # endif
 
 # ifndef MAX_FD
-#  define MAX_FD 8192
+#  define MAX_FD 16384
 # endif
 
 typedef struct s_buffer	t_buffer;
