@@ -6,11 +6,21 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:37 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/29 18:40:43 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 19:17:39 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+
+t_string	init_string(void)
+{
+	t_string	s;
+
+	s.str = 0;
+	s.len = 0;
+	s.size = 0;
+	return (s);
+}
 
 int	get_index(char *s, char c, int begin, int end)
 {
@@ -26,7 +36,7 @@ int	get_index(char *s, char c, int begin, int end)
 	return (end - 1);
 }
 
-static void	*gnl_memcpy(void *dst, const void *src, size_t n)
+void	*gnl_memcpy(void *dst, const void *src, size_t n)
 {
 	size_t	i;
 

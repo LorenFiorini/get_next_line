@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 03:26:34 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/29 18:35:34 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 18:54:02 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*get_next_line(int fd)
 	static t_buffer	buffer;
 	t_string		line;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	line = init_string();
 	while (1)
 	{
