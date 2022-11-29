@@ -6,13 +6,11 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 03:26:34 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/28 05:02:55 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 17:47:44 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdlib.h>
-#include <unistd.h>
 
 static t_string	init_string(void)
 {

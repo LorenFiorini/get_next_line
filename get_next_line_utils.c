@@ -6,13 +6,11 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 03:26:29 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/28 03:28:20 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 17:47:43 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdlib.h>
-#include <unistd.h>
 
 static int	get_index(char *s, char c, int begin, int end)
 {

@@ -6,13 +6,11 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:37 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/28 05:02:51 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 17:47:49 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-#include <stdlib.h>
-#include <unistd.h>
 
 int	get_index(char *s, char c, int begin, int end)
 {
