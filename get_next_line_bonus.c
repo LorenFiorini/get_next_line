@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:25 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/29 17:47:54 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 18:40:55 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ static int	loop(int fd, t_buffer *cur, t_string *line)
 {
 	while (1)
 	{
-		if (!cur->idx && !read_buffer(fd, cur))
-			break ;
-		if (!update_line(line, *cur))
+		if (!cur->idx)
+			cur->len = read(fd, cur->buf, BUFFER_SIZE);
+		if (cur->len <= 0 || !update_line(line, *cur))
 			break ;
 		cur->idx = (get_index(cur->buf, '\n', cur->idx, cur->len) + 1);
 		cur->idx %= cur->len;

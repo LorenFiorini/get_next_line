@@ -6,7 +6,7 @@
 /*   By: lfiorini <lfiorini@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 02:28:37 by lfiorini          #+#    #+#             */
-/*   Updated: 2022/11/29 17:47:49 by lfiorini         ###   ########.fr       */
+/*   Updated: 2022/11/29 18:40:43 by lfiorini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,6 @@ int	update_line(t_string *l, t_buffer b)
 	l->len = tmp.len;
 	l->str[l->len] = 0;
 	return (1);
-}
-
-int	read_buffer(int fd, t_buffer *b)
-{
-	b->len = read(fd, b->buf, BUFFER_SIZE);
-	if (b->len > 0)
-		return (1);
-	return (0);
 }
 
 t_string	optimize_string(t_string s)
